@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<mule xmlns:http="http://www.mulesoft.org/schema/mule/http" xmlns="http://www.mulesoft.org/schema/mule/core"
+	xmlns:doc="http://www.mulesoft.org/schema/mule/documentation"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
+http://www.mulesoft.org/schema/mule/http http://www.mulesoft.org/schema/mule/http/current/mule-http.xsd">
+	<http:listener-config name="HTTP_Listener_config" doc:name="HTTP Listener config" doc:id="721067b8-e553-4d7f-ac49-603ad72376ca" basePath="/api" >
+		<http:listener-connection host="0.0.0.0" port="8081" />
+	</http:listener-config>
+	<http:request-config name="HTTP_Request_configuration" doc:name="HTTP Request configuration" doc:id="7f3f92d7-fc18-4adb-ae84-46eeaca326b0" basePath="/api" >
+		<http:request-connection host="localhost" port="8081" />
+	</http:request-config>
+	<flow name="sonarqube-testingFlow" doc:id="7ef2d4d5-a5a7-49c0-a174-06d3a9871eaa" >
+		<http:listener doc:name="Listener" doc:id="0a04d8b2-be91-4b3e-b1a7-79d53bcaf8f1" config-ref="HTTP_Listener_config" path="/get-sonar"/>
+		<set-payload value='#["blue"]' doc:name="Set Payload" doc:id="02c07e54-727d-42a6-8cd1-2e82cb4f1383" />
+		<choice doc:name="Choice" doc:id="f81fc8ce-2b80-493c-a132-da325fba3a6b" >
+			<when expression="#[payload == 'blue']">
+				<http:request method="GET" doc:name="Request" doc:id="85b7c5f0-050e-4552-bd48-a218961d183f" config-ref="HTTP_Request_configuration" path="/get-sonar"/>
+			</when>
+			<otherwise >
+				<logger level="INFO" doc:name="Logger" doc:id="0e206006-4fda-445c-a30a-ffbdaf09ddf7" />
+			</otherwise>
+		</choice>
+	</flow>
+</mule>
